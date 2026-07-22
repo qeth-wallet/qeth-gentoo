@@ -49,8 +49,18 @@ sync-uri  = https://github.com/qeth-wallet/qeth-gentoo.git
 EOF
 emaint sync -r qeth-gentoo
 
+# The overlay is ~amd64 and uses a couple of non-default PySide6 USE flags, so
+# let Portage collect the keyword/USE changes, apply them, then install:
+emerge --autounmask-write -av net-p2p/qeth
+dispatch-conf                 # or etc-update — review & apply the changes
 emerge -av net-p2p/qeth
 ```
+
+The autounmask step keywords `net-p2p/qeth`, `net-p2p/helios-bin` and a few
+`~amd64` Python deps (`segno`, `hidapi`, `libusb1`), and enables
+`dev-python/pyside[svg]` (icons) + `[multimedia]` (QR camera scanning). Enabling
+the `falkon` USE flag additionally rebuilds PySide6 with `[webengine]` and pulls
+`www-client/falkon[python]` — a longer, from-source build.
 
 `~/.qeth` holds config, encrypted keystores and caches (untouched by the
 package; only code and the vendored deps are installed system-wide).
