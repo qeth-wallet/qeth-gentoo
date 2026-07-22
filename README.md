@@ -25,6 +25,7 @@ server.
 | `helios` | on | verified (light-client) reads via `net-p2p/helios-bin` |
 | `qr` | on | air-gapped QR signing + camera scanning (pulls Qt Multimedia) |
 | `frame` | on | import Frame desktop-wallet accounts (pulls `dev-python/cryptography`) |
+| `ledger` | on | Ledger hardware-wallet support (vendors ledgereth/ledgerblue + the USB/BLE stack) |
 | `falkon` | off | install the Falkon browser connector plugin |
 | `chromium` | off | install the Chrome extension for manual loading |
 | `firefox` | off | install + register the signed Firefox extension |

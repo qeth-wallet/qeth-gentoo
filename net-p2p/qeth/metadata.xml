@@ -18,6 +18,7 @@
 		<flag name="helios">Verified (light-client-checked) reads via net-p2p/helios-bin</flag>
 		<flag name="qr">Air-gapped QR signing and camera scanning (pulls Qt Multimedia)</flag>
 		<flag name="frame">Import Frame desktop-wallet accounts (pulls dev-python/cryptography)</flag>
+		<flag name="ledger">Ledger hardware-wallet support (vendors ledgereth/ledgerblue + the USB/BLE stack)</flag>
 		<flag name="falkon">Install the Falkon browser connector plugin</flag>
 		<flag name="chromium">Install the Chrome/Chromium extension package for manual loading</flag>
 		<flag name="firefox">Install and register the signed Firefox extension</flag>
