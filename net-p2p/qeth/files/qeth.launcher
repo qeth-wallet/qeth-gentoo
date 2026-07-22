@@ -1,0 +1,7 @@
+#!/bin/sh
+# qeth launcher — runs the app through its private vendored dependency tree
+# (the Ethereum stack, which is too narrowly pinned to live in system
+# site-packages). PySide6 / aiohttp / pydantic / … come from the system.
+# @EPYTHON@ and @VENDOR@ are substituted at install time.
+exec env PYTHONPATH="@VENDOR@${PYTHONPATH:+:${PYTHONPATH}}" \
+	@EPYTHON@ -m qeth "$@"

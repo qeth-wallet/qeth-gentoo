@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>michwill@yieldbasis.com</email>
+		<name>Michael Egorov</name>
+	</maintainer>
+	<longdescription lang="en">
+		Helios is a trustless, efficient Ethereum light client from a16z. It
+		verifies chain data against a committee sync, so reads can be checked
+		rather than trusted. net-p2p/qeth uses it as an optional sidecar for
+		verified reads (enable the "helios" USE flag on qeth). This package
+		installs the upstream prebuilt linux/amd64 binary to /usr/bin/helios,
+		where qeth auto-detects it on PATH.
+	</longdescription>
+	<upstream>
+		<remote-id type="github">a16z/helios</remote-id>
+	</upstream>
+</pkgmetadata>

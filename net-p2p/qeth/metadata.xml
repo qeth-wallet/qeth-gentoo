@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>michwill@yieldbasis.com</email>
+		<name>Michael Egorov</name>
+	</maintainer>
+	<longdescription lang="en">
+		qeth is a Qt (PySide6) Ethereum wallet for the desktop, with Ledger
+		hardware-wallet support and a Frame-compatible JSON-RPC server on
+		127.0.0.1:1248. The Ethereum library stack (web3, eth-*, ledgereth, and
+		their narrowly-pinned compiled deps) is vendored from source into a
+		private tree; PySide6 and the other generic dependencies come from the
+		system.
+	</longdescription>
+	<use>
+		<flag name="simulate">Transaction preview via a bundled local py-evm fork engine</flag>
+		<flag name="helios">Verified (light-client-checked) reads via net-p2p/helios-bin</flag>
+		<flag name="qr">Air-gapped QR signing and camera scanning (pulls Qt Multimedia)</flag>
+		<flag name="frame">Import Frame desktop-wallet accounts (pulls dev-python/cryptography)</flag>
+		<flag name="falkon">Install the Falkon browser connector plugin</flag>
+		<flag name="chromium">Install the Chrome/Chromium extension package for manual loading</flag>
+		<flag name="firefox">Install and register the signed Firefox extension</flag>
+	</use>
+	<upstream>
+		<remote-id type="github">qeth-wallet/qeth</remote-id>
+	</upstream>
+</pkgmetadata>
