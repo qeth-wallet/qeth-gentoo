@@ -114,7 +114,7 @@ RDEPEND="${PYTHON_DEPS}
 		falkon? ( dev-python/pyside[webchannel,webengine,${PYTHON_USEDEP}] )
 	')
 	helios? ( net-p2p/helios-bin )
-	falkon? ( www-client/falkon )
+	falkon? ( www-client/falkon[python,${PYTHON_SINGLE_USEDEP}] )
 "
 
 # Build backends for the offline from-source vendoring (--no-build-isolation).
