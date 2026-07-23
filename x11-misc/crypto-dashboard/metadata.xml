@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>michwill@yieldbasis.com</email>
+		<name>Michael Egorov</name>
+	</maintainer>
+	<longdescription lang="en">
+		Real-time cryptocurrency dashboard built with Python and Qt (PyQt6).
+		Candlestick charts (pyqtgraph) with OHLC data streamed live from Binance
+		over WebSocket, multiple timeframes, a live ticker table and a saved
+		coin watchlist. PyQt6 is provided by the system; the remaining
+		pure-Python dependencies come from the Gentoo tree.
+	</longdescription>
+	<upstream>
+		<remote-id type="github">michwill/crypto-dashboard</remote-id>
+	</upstream>
+</pkgmetadata>

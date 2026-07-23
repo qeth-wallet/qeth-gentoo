@@ -16,6 +16,10 @@ server.
   narrowly for system site-packages.
 - **`net-p2p/helios-bin`** — the a16z Helios light client (upstream prebuilt
   binary), the optional verified-reads sidecar for qeth.
+- **`x11-misc/crypto-dashboard`** — a real-time cryptocurrency dashboard
+  (PyQt6 + pyqtgraph) with live Binance candlestick charts. A plain
+  `distutils-r1` (hatchling) package: PyQt6 and all other dependencies come
+  from the Gentoo tree, nothing is vendored.
 
 ## USE flags (net-p2p/qeth)
 
