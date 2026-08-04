@@ -81,3 +81,36 @@ package; only code and the vendored deps are installed system-wide).
 - **helios** pins the upstream `0.11.1` linux/amd64 release; qeth auto-detects
   `/usr/bin/helios` on PATH and degrades to untrusted RPC when absent.
 - amd64 only for now.
+
+## Bumping to a new qeth release
+
+1. `git mv net-p2p/qeth/qeth-<old>.ebuild net-p2p/qeth/qeth-<new>.ebuild`
+2. Check whether anything **vendored** moved, by diffing the app's lockfile
+   between the two tags — the ebuild's `SRC_URI` sdist list has to match it:
+   ```sh
+   git -C ../qeth diff v<old>..v<new> -- uv.lock | grep -E '^[+-](name|version) ='
+   ```
+   Build-only dependency groups (e.g. the macOS `macos-build` PyInstaller set)
+   are not vendored and can be ignored.
+3. `ebuild net-p2p/qeth/qeth-<new>.ebuild manifest`
+4. **Test the emerge with every optional USE flag turned ON** — see below.
+
+### Test with all USE flags, not the box's defaults
+
+```sh
+USE="firefox chromium falkon frame helios ledger qr simulate" \
+    emerge -1 net-p2p/qeth
+```
+
+A machine's default USE is usually a *subset*, so a plain `emerge` can go green
+while leaving whole `src_install` branches unexecuted. That is not theoretical:
+0.23.0 shipped broken for `USE=firefox` and `USE=chromium` because
+`src_install` did `doins extensions/firefox/${PN}-${PV}.xpi`, and the bundled
+extensions do **not** track `${PV}` — they are regenerated only when the
+extension itself is republished (the Firefox `.xpi` needs AMO signing), so at
+qeth 0.23.0 the tarball still carried 0.22.0 / 0.22.3 packages. The names had
+matched at 0.22.0 by coincidence, and the test box had both flags off.
+
+The general form of the trap: **an unchanged ebuild against a changed tarball
+is a new configuration**, so "the body didn't change" is not a reason to skip
+the build test.
