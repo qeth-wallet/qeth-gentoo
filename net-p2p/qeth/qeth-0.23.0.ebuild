@@ -220,23 +220,36 @@ src_install() {
 			"${fk}"/relay.js "${fk}"/qeth-icon.svg "${fk}"/metadata.desktop
 	fi
 
-	# Chrome extension: ship the packaged zip + an unpacked dir to load.
+	# The browser extensions are NOT version-locked to the app: they are
+	# regenerated only when the extension itself is republished (the Firefox
+	# .xpi has to be signed by AMO), so their filenames trail ${PV} — at
+	# 0.23.0 the shipped pair is 0.22.0 / 0.22.3. Glob for what the tarball
+	# actually contains instead of assuming ${PV}, which broke the install
+	# phase the first time the app version moved without a republish. The
+	# connector protocol (JSON-RPC on 127.0.0.1:1248) is stable across these,
+	# so an older extension talks to a newer qeth fine.
+	local zip xpi
 	if use chromium; then
+		zip=$(echo extensions/chrome/${PN}-*-chrome.zip)
+		[[ -f ${zip} ]] || die "no chrome extension zip in extensions/chrome/"
 		insinto /usr/share/${PN}/extensions/chrome
-		doins extensions/chrome/${PN}-${PV}-chrome.zip
+		doins "${zip}"
 		mkdir -p "${T}"/chrome-unpacked || die
-		unzip -q extensions/chrome/${PN}-${PV}-chrome.zip \
-			-d "${T}"/chrome-unpacked || die
+		unzip -q "${zip}" -d "${T}"/chrome-unpacked || die
 		insinto /usr/share/${PN}/extensions/chrome/unpacked
 		doins -r "${T}"/chrome-unpacked/.
+		einfo "bundled Chrome extension: $(basename "${zip}")"
 	fi
 
 	# Firefox extension: the signed .xpi, plus an auto-drop so Firefox offers it.
 	if use firefox; then
+		xpi=$(echo extensions/firefox/${PN}-*.xpi)
+		[[ -f ${xpi} ]] || die "no signed .xpi in extensions/firefox/"
 		insinto /usr/share/${PN}/extensions/firefox
-		doins extensions/firefox/${PN}-${PV}.xpi
+		doins "${xpi}"
 		insinto "/usr/$(get_libdir)/mozilla/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
-		newins extensions/firefox/${PN}-${PV}.xpi wallet@qeth.eth.xpi
+		newins "${xpi}" wallet@qeth.eth.xpi
+		einfo "bundled Firefox extension: $(basename "${xpi}")"
 	fi
 }
 
