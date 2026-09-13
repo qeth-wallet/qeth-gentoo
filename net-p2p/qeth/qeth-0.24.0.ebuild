@@ -3,10 +3,12 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_13 )
+# 3.14 is the current Gentoo default (PYTHON_SINGLE_TARGET); with only 3.13
+# listed, emerge refused the package on an up-to-date system.
+PYTHON_COMPAT=( python3_{13..14} )
 inherit desktop python-single-r1 xdg
 
-DESCRIPTION="Qt Ethereum wallet with Ledger support and a Frame-compatible JSON-RPC server"
+DESCRIPTION="Qt Ethereum wallet with Ledger/Trezor support and a Frame-compatible JSON-RPC server"
 HOMEPAGE="https://github.com/qeth-wallet/qeth"
 
 # The Ethereum stack (web3, eth-*, ledgereth, ckzg, cytoolz, …) is absent from
@@ -55,12 +57,19 @@ SRC_URI="
 	qr? (
 		https://files.pythonhosted.org/packages/23/39/6621d964dbf7f31dbaade0981a5df4e9db247457962e6bbb88d1b8d55763/zxing_cpp-3.1.0.tar.gz
 	)
+	trezor? (
+		https://files.pythonhosted.org/packages/5e/f8/479a694f6d6f39f53e77733c653879e5b047cdeb458f8e6e550379540802/trezor-0.20.2.tar.gz
+		https://files.pythonhosted.org/packages/4b/51/ccbdcd0bcf52190159f9492333f4134b0a783477f1a1063351b0196777ae/construct_classes-0.2.3.tar.gz
+		https://files.pythonhosted.org/packages/ff/77/e6232ed59fbd7b90208bb8d4f89ed5aabcf30a524bc2fb8f0dafbe8e7df9/mnemonic-0.21.tar.gz
+		https://files.pythonhosted.org/packages/b2/fd/9f5b305b5280795209817efe6b0cd6017f4714e3f36d160b2d4dfcc78c02/shamir_mnemonic-0.3.0.tar.gz
+		https://files.pythonhosted.org/packages/dd/7a/744be94761ace101a8efc91c467cae673da68bea7e4eb50771cd5583119d/slip10-1.1.0.tar.gz
+	)
 "
 
 LICENSE="GPL-3+"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="+simulate +helios +qr +frame +ledger falkon chromium firefox"
+IUSE="+simulate +helios +qr +frame +ledger +trezor falkon chromium firefox"
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 # System (generic) deps — the eth stack is vendored (see SRC_URI / src_install).
@@ -111,6 +120,15 @@ RDEPEND="${PYTHON_DEPS}
 			dev-python/pyside[multimedia,${PYTHON_USEDEP}]
 		)
 		frame? ( dev-python/cryptography[${PYTHON_USEDEP}] )
+		trezor? (
+			dev-python/click[${PYTHON_USEDEP}]
+			dev-python/construct[${PYTHON_USEDEP}]
+			dev-python/cryptography[${PYTHON_USEDEP}]
+			dev-python/keyring[${PYTHON_USEDEP}]
+			dev-python/libusb1[${PYTHON_USEDEP}]
+			dev-python/noiseprotocol[${PYTHON_USEDEP}]
+			dev-python/platformdirs[${PYTHON_USEDEP}]
+		)
 		falkon? ( dev-python/pyside[webchannel,webengine,${PYTHON_USEDEP}] )
 	')
 	helios? ( net-p2p/helios-bin )
@@ -125,6 +143,10 @@ BDEPEND="${PYTHON_DEPS}
 		dev-python/wheel[${PYTHON_USEDEP}]
 		dev-python/cython[${PYTHON_USEDEP}]
 		ledger? ( dev-python/setuptools-scm[${PYTHON_USEDEP}] )
+		trezor? (
+			dev-python/flit-core[${PYTHON_USEDEP}]
+			dev-python/poetry-core[${PYTHON_USEDEP}]
+		)
 		qr? (
 			dev-python/scikit-build-core[${PYTHON_USEDEP}]
 			dev-python/nanobind[${PYTHON_USEDEP}]
@@ -135,6 +157,7 @@ BDEPEND="${PYTHON_DEPS}
 		dev-build/ninja
 	)
 	chromium? ( app-arch/unzip )
+	firefox? ( app-arch/unzip )
 "
 
 # Only the qeth tarball is unpacked; the vendored sdists/wheels stay in
@@ -180,6 +203,12 @@ src_install() {
 		py_ecc-8.0.0.tar.gz py_evm-0.12.1b1.tar.gz trie-3.1.0.tar.gz
 	)
 	use qr && vend+=( zxing_cpp-3.1.0.tar.gz )
+	# Trezor: trezorlib + the pieces of its closure not in ::gentoo (the rest —
+	# construct, noiseprotocol, libusb1, keyring, … — are RDEPEND above).
+	use trezor && vend+=(
+		trezor-0.20.2.tar.gz construct_classes-0.2.3.tar.gz mnemonic-0.21.tar.gz
+		shamir_mnemonic-0.3.0.tar.gz slip10-1.1.0.tar.gz
+	)
 
 	# qeth itself + the vendored eth stack, compiled from source, into a private
 	# tree off the default sys.path. --no-deps keeps the set to the resolved
@@ -241,15 +270,22 @@ src_install() {
 		einfo "bundled Chrome extension: $(basename "${zip}")"
 	fi
 
-	# Firefox extension: the signed .xpi, plus an auto-drop so Firefox offers it.
+	# Firefox extension: the Mozilla-signed .xpi, plus an auto-drop so Firefox
+	# offers it. A sideloaded xpi is only picked up when its filename IS the
+	# add-on id, and the id is whatever Mozilla signed it under (the shipped
+	# build is firefox@qeth.eth, not the source manifest's wallet@qeth.eth) —
+	# so read it out of the xpi rather than hardcoding it.
 	if use firefox; then
 		xpi=$(echo extensions/firefox/${PN}-*.xpi)
 		[[ -f ${xpi} ]] || die "no signed .xpi in extensions/firefox/"
 		insinto /usr/share/${PN}/extensions/firefox
 		doins "${xpi}"
+		QETH_XPI_ID=$(unzip -p "${xpi}" manifest.json | "${EPYTHON}" -c \
+			'import json,sys; print(json.load(sys.stdin)["browser_specific_settings"]["gecko"]["id"])') \
+			|| die "can't read the add-on id from ${xpi}"
 		insinto "/usr/$(get_libdir)/mozilla/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
-		newins "${xpi}" wallet@qeth.eth.xpi
-		einfo "bundled Firefox extension: $(basename "${xpi}")"
+		newins "${xpi}" "${QETH_XPI_ID}.xpi"
+		einfo "bundled Firefox extension: $(basename "${xpi}") (${QETH_XPI_ID})"
 	fi
 }
 
@@ -263,13 +299,19 @@ pkg_postinst() {
 	if use falkon; then
 		elog "Falkon: enable 'qeth connector' in Falkon -> Preferences -> Extensions."
 	fi
+	if use trezor; then
+		elog "Trezor: your user needs USB access — install Trezor's udev rules"
+		elog "  (https://data.trezor.io/udev/51-trezor.rules) if nothing else ships them."
+	fi
 	if use chromium; then
-		elog "Chrome: chrome://extensions -> Developer mode -> Load unpacked ->"
-		elog "  /usr/share/${PN}/extensions/chrome/unpacked"
+		elog "Chrome: install qeth from the Chrome Web Store:"
+		elog "  https://chromewebstore.google.com/detail/qeth/epgcgaelolincjdknocjebnenahjhoop"
+		elog "  or load the bundled copy: chrome://extensions -> Developer mode ->"
+		elog "  Load unpacked -> /usr/share/${PN}/extensions/chrome/unpacked"
 	fi
 	if use firefox; then
-		elog "Firefox should offer the qeth add-on (wallet@qeth.eth); otherwise"
-		elog "  about:addons -> Install Add-on From File -> the .xpi under"
+		elog "Firefox should offer the Mozilla-signed qeth add-on on next start;"
+		elog "  otherwise about:addons -> Install Add-on From File -> the .xpi under"
 		elog "  /usr/share/${PN}/extensions/firefox/"
 	fi
 }

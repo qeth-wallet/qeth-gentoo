@@ -1,8 +1,8 @@
 # qeth-gentoo
 
 A Gentoo/Portage overlay for [qeth](https://github.com/qeth-wallet/qeth) — a
-Qt (PySide6) Ethereum wallet with Ledger support and a Frame-compatible JSON-RPC
-server.
+Qt (PySide6) Ethereum wallet with Ledger and Trezor support and a Frame-compatible
+JSON-RPC server.
 
 ## Packages
 
@@ -30,9 +30,10 @@ server.
 | `qr` | on | air-gapped QR signing + camera scanning (pulls Qt Multimedia) |
 | `frame` | on | import Frame desktop-wallet accounts (pulls `dev-python/cryptography`) |
 | `ledger` | on | Ledger hardware-wallet support (vendors ledgereth/ledgerblue + the USB/BLE stack) |
+| `trezor` | on | Trezor hardware-wallet support (vendors trezorlib + the parts of its closure not in ::gentoo) |
 | `falkon` | off | install the Falkon browser connector plugin |
-| `chromium` | off | install the Chrome extension for manual loading |
-| `firefox` | off | install + register the signed Firefox extension |
+| `chromium` | off | install the Chrome extension for manual loading (it is also on the Chrome Web Store) |
+| `firefox` | off | install + register the Mozilla-signed Firefox extension (registered under the id it was signed with) |
 
 The three browser-integration flags are off by default so a plain install pulls
 no external browser.
@@ -98,7 +99,7 @@ package; only code and the vendored deps are installed system-wide).
 ### Test with all USE flags, not the box's defaults
 
 ```sh
-USE="firefox chromium falkon frame helios ledger qr simulate" \
+USE="firefox chromium falkon frame helios ledger qr simulate trezor" \
     emerge -1 net-p2p/qeth
 ```
 
