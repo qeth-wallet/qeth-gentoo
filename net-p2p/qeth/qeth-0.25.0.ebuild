@@ -21,16 +21,16 @@ SRC_URI="
 	https://github.com/qeth-wallet/qeth/archive/refs/tags/v${PV}.tar.gz -> ${P}.tar.gz
 	https://files.pythonhosted.org/packages/e3/5a/df537a48d60fcb23c2e76bf0192a1d812f6f540e6cae698e402a3bbc27f8/setuptools_git_versioning-3.1.0-py3-none-any.whl
 	https://files.pythonhosted.org/packages/2b/88/552337d9fc69dc85fb6102c18b73a9f3f77efb39bb9a0c1a8c61bbdd7274/ckzg-2.1.8.tar.gz
-	https://files.pythonhosted.org/packages/bd/d4/16916f3dc20a3f5455b63c35dcb260b3716f59ce27a93586804e70e431d5/cytoolz-1.1.0.tar.gz
-	https://files.pythonhosted.org/packages/00/71/d9e1380bd77fd22f98b534699af564f189b56d539cc2b9dab908d4e4c242/eth_abi-5.2.0.tar.gz
+	https://files.pythonhosted.org/packages/43/ce/d8bd9b5f85b11c7231f7cec791e1248949c8073e9cded5076759d973d35b/cytoolz-1.2.0.tar.gz
+	https://files.pythonhosted.org/packages/b6/90/8bbcb07308436211a1e9a09a2fbaa259d2a169d3b081ca22525e22d16444/eth_abi-6.0.0.tar.gz
 	https://files.pythonhosted.org/packages/74/cf/20f76a29be97339c969fd765f1237154286a565a1d61be98e76bb7af946a/eth_account-0.13.7.tar.gz
 	https://files.pythonhosted.org/packages/3c/f5/c67fc24f2f676aa9b7ab29679d44f113f314c817207cd4319353356f62da/eth_hash-0.8.0.tar.gz
 	https://files.pythonhosted.org/packages/35/66/dd823b1537befefbbff602e2ada88f1477c5b40ec3731e3d9bc676c5f716/eth_keyfile-0.8.1.tar.gz
-	https://files.pythonhosted.org/packages/58/11/1ed831c50bd74f57829aa06e58bd82a809c37e070ee501c953b9ac1f1552/eth_keys-0.7.0.tar.gz
-	https://files.pythonhosted.org/packages/7f/ea/ad39d001fa9fed07fad66edb00af701e29b48be0ed44a3bcf58cb3adf130/eth_rlp-2.2.0.tar.gz
+	https://files.pythonhosted.org/packages/39/58/f54660cffe3f39aad2d80d13b072973ee9134b6cdfd8b4d086419eda997b/eth_keys-0.8.0.tar.gz
+	https://files.pythonhosted.org/packages/5f/e1/9719acaa45e6f158ebfc260a97edc71591264c1d09701cf8a30a687a36b0/eth_rlp-3.0.0.tar.gz
 	https://files.pythonhosted.org/packages/37/e7/06c5af99ad40494f6d10126a9030ff4eb14c5b773f2a4076017efb0a163a/eth_typing-6.0.0.tar.gz
 	https://files.pythonhosted.org/packages/e6/e1/ee3a8728227c3558853e63ff35bd4c449abdf5022a19601369400deacd39/eth_utils-5.3.1.tar.gz
-	https://files.pythonhosted.org/packages/7f/87/adf4635b4b8c050283d74e6db9a81496063229c9263e6acc1903ab79fbec/hexbytes-1.3.1.tar.gz
+	https://files.pythonhosted.org/packages/27/4f/eabe45c58f2d27cd0b338ecc41b0b475a3751ed70eb1a21db08497e3ceec/hexbytes-2.0.0.tar.gz
 	https://files.pythonhosted.org/packages/7b/91/abdc50c4ef06fdf8d047f60ee777ca9b2a7885e1a9cea81343fbecda52d7/parsimonious-0.10.0.tar.gz
 	https://files.pythonhosted.org/packages/25/ab/b912c484cfb96ba4834efe050bbf10c9e157bd8189eb859aefba8712b136/pyunormalize-17.0.0.tar.gz
 	https://files.pythonhosted.org/packages/0f/49/bcd4d3f9210ed78749eab04d236eeb98f98fbcc16977f308ee4637c1bad8/rlp-4.0.1.tar.gz
@@ -43,19 +43,19 @@ SRC_URI="
 		https://files.pythonhosted.org/packages/b5/bb/4923dc24cda5ae4b2f21b85d02a57a026a6e8cc5379f40db869653e7b414/ledgereth-0.10.0.tar.gz
 		https://files.pythonhosted.org/packages/58/f8/cd11ec90bd6a6bcf35bb80e4e29fdebe8bf2b05e869a93ca1e41d85518d0/ndeflib-0.3.3.tar.gz
 		https://files.pythonhosted.org/packages/38/a2/cce3ab796e84bea5098c4231ff56e523cb182c58a21280ccff0d75e693e6/nfcpy-1.0.4.tar.gz
-		https://files.pythonhosted.org/packages/c9/85/e24bf90972a30b0fcd16c73009add1d7d7cd9140c2498a68252028899e41/pycryptodomex-3.23.0.tar.gz
+		https://files.pythonhosted.org/packages/f4/e7/50e72301e32acb73a314e663c2014e1ddefc019d5f434ff14ec89861d664/pycryptodomex-3.24.1.tar.gz
 		https://files.pythonhosted.org/packages/4d/3d/0997fe8196f5be24b7015708a0744a0ef928c4fb3c8bc820dc3328208ef2/python-u2flib-host-3.0.3.tar.gz
 	)
 	simulate? (
 		https://files.pythonhosted.org/packages/76/4b/3d870836119dbe9a5e3c9a61af8cc1a8b69d75aea564572e385882d5aefb/cached_property-2.0.1.tar.gz
-		https://files.pythonhosted.org/packages/89/d6/9c345601de27b536dc8b0f4c1d6cb84fe76a47de9ac02753f58deae59c86/eth_bloom-3.1.0.tar.gz
+		https://files.pythonhosted.org/packages/f3/ba/05174f5cd0d47230bab59706a5257ed812385fb05c1acba7c8ad9945c14a/eth_bloom-4.0.0.tar.gz
 		https://files.pythonhosted.org/packages/06/0a/dec86efe38b350314c49a8d39ef01ba7cf8bbbef1d177646320eedea7159/lru_dict-1.4.1.tar.gz
 		https://files.pythonhosted.org/packages/1c/96/e73075d5c885274efada2fbc5db6377022036c2f5b4b470dbcf4106e07d5/py_ecc-8.0.0.tar.gz
 		https://files.pythonhosted.org/packages/0a/57/a0a84d991bac43058200245d853de9e7e819d216b56e22f66654fdf596d5/py_evm-0.12.1b1.tar.gz
 		https://files.pythonhosted.org/packages/a6/2f/5ec6be52952de47e79b1d250c00a922365a76503e3c75605c1cd890c61aa/trie-3.1.0.tar.gz
 	)
 	qr? (
-		https://files.pythonhosted.org/packages/23/39/6621d964dbf7f31dbaade0981a5df4e9db247457962e6bbb88d1b8d55763/zxing_cpp-3.1.0.tar.gz
+		https://files.pythonhosted.org/packages/b9/30/ad0e0352c593712ebb47143571ff11b130812e2852d7540e7c80cdf23340/zxing_cpp-3.1.1.tar.gz
 	)
 	trezor? (
 		https://files.pythonhosted.org/packages/5e/f8/479a694f6d6f39f53e77733c653879e5b047cdeb458f8e6e550379540802/trezor-0.20.2.tar.gz
@@ -136,13 +136,16 @@ RDEPEND="${PYTHON_DEPS}
 "
 
 # Build backends for the offline from-source vendoring (--no-build-isolation).
+# setuptools-scm is unconditional since 0.25.0: eth-abi 6, eth-keys 0.8,
+# eth-rlp 3, hexbytes 2 and eth-bloom 4 build with setuptools_scm>=8 (before,
+# only the ledger cluster needed it).
 BDEPEND="${PYTHON_DEPS}
 	$(python_gen_cond_dep '
 		dev-python/pip[${PYTHON_USEDEP}]
 		dev-python/setuptools[${PYTHON_USEDEP}]
 		dev-python/wheel[${PYTHON_USEDEP}]
 		dev-python/cython[${PYTHON_USEDEP}]
-		ledger? ( dev-python/setuptools-scm[${PYTHON_USEDEP}] )
+		dev-python/setuptools-scm[${PYTHON_USEDEP}]
 		trezor? (
 			dev-python/flit-core[${PYTHON_USEDEP}]
 			dev-python/poetry-core[${PYTHON_USEDEP}]
@@ -184,10 +187,10 @@ src_install() {
 
 	# The vendored distfiles per USE (basenames live in ${DISTDIR}).
 	local vend=(
-		ckzg-2.1.8.tar.gz cytoolz-1.1.0.tar.gz eth_abi-5.2.0.tar.gz
+		ckzg-2.1.8.tar.gz cytoolz-1.2.0.tar.gz eth_abi-6.0.0.tar.gz
 		eth_account-0.13.7.tar.gz eth_hash-0.8.0.tar.gz eth_keyfile-0.8.1.tar.gz
-		eth_keys-0.7.0.tar.gz eth_rlp-2.2.0.tar.gz eth_typing-6.0.0.tar.gz
-		eth_utils-5.3.1.tar.gz hexbytes-1.3.1.tar.gz parsimonious-0.10.0.tar.gz
+		eth_keys-0.8.0.tar.gz eth_rlp-3.0.0.tar.gz eth_typing-6.0.0.tar.gz
+		eth_utils-5.3.1.tar.gz hexbytes-2.0.0.tar.gz parsimonious-0.10.0.tar.gz
 		pyunormalize-17.0.0.tar.gz rlp-4.0.1.tar.gz web3-7.16.0.tar.gz
 	)
 	# Ledger hardware-wallet cluster (ledgereth pins ledgerblue==0.1.48; bleak is
@@ -196,13 +199,13 @@ src_install() {
 		ledgereth-0.10.0.tar.gz ledgerblue-0.1.48.tar.gz
 		bleak-3.0.2-py3-none-any.whl ECPy-1.2.5.tar.gz nfcpy-1.0.4.tar.gz
 		ndeflib-0.3.3.tar.gz future-1.0.0.tar.gz python-u2flib-host-3.0.3.tar.gz
-		pycryptodomex-3.23.0.tar.gz
+		pycryptodomex-3.24.1.tar.gz
 	)
 	use simulate && vend+=(
-		cached_property-2.0.1.tar.gz eth_bloom-3.1.0.tar.gz lru_dict-1.4.1.tar.gz
+		cached_property-2.0.1.tar.gz eth_bloom-4.0.0.tar.gz lru_dict-1.4.1.tar.gz
 		py_ecc-8.0.0.tar.gz py_evm-0.12.1b1.tar.gz trie-3.1.0.tar.gz
 	)
-	use qr && vend+=( zxing_cpp-3.1.0.tar.gz )
+	use qr && vend+=( zxing_cpp-3.1.1.tar.gz )
 	# Trezor: trezorlib + the pieces of its closure not in ::gentoo (the rest —
 	# construct, noiseprotocol, libusb1, keyring, … — are RDEPEND above).
 	use trezor && vend+=(
@@ -241,12 +244,12 @@ src_install() {
 	doins dist/flatpak/io.github.michwill.qeth.metainfo.xml
 
 	# Falkon connector plugin (a Python plugin Falkon loads from its plugin dir).
+	# The whole directory, not a file list: 0.25.0 added site.py (imported at
+	# load) and tronweb/ (the bundled TronWeb the Tron provider injects), and a
+	# named list would have silently dropped both.
 	if use falkon; then
-		insinto /usr/$(get_libdir)/qt6/plugins/falkon/qeth_connector
-		local fk=extensions/falkon/qeth_connector
-		doins "${fk}"/__init__.py "${fk}"/bridge.py "${fk}"/toolbar.py \
-			"${fk}"/settings.py "${fk}"/probe.py "${fk}"/provider.js \
-			"${fk}"/relay.js "${fk}"/qeth-icon.svg "${fk}"/metadata.desktop
+		insinto /usr/$(get_libdir)/qt6/plugins/falkon
+		doins -r extensions/falkon/qeth_connector
 	fi
 
 	# The browser extensions are NOT version-locked to the app: they are

@@ -79,8 +79,10 @@ package; only code and the vendored deps are installed system-wide).
   ever leaks into the vendored tree.
 - **bleak** is vendored as its noarch wheel (it is import-required by
   `ledgerblue.comm`, but its sdist uses the `uv_build` backend, which we avoid).
-- **helios** pins the upstream `0.11.1` linux/amd64 release; qeth auto-detects
-  `/usr/bin/helios` on PATH and degrades to untrusted RPC when absent.
+- **helios** pins the upstream `0.12.0` linux/amd64 release; qeth auto-detects
+  `/usr/bin/helios` on PATH and degrades to untrusted RPC when absent. (0.11.1
+  was dropped: it compiled in a CA list that still trusts the compromised
+  eMudhra intermediates; 0.12.0 verifies TLS through the system store.)
 - amd64 only for now.
 
 ## Bumping to a new qeth release
