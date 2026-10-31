@@ -20,6 +20,14 @@ JSON-RPC server.
   (PyQt6 + pyqtgraph) with live Binance candlestick charts. A plain
   `distutils-r1` (hatchling) package: PyQt6 and all other dependencies come
   from the Gentoo tree, nothing is vendored.
+- **`www-plugins/keepassxc-falkon`** — [KeePassXC as Falkon's password
+  manager](https://github.com/michwill/keepassxc-falkon): filling (iframes
+  included), saving, passkeys and a toolbar menu with copy actions. A Python
+  plugin installed into Falkon's system plugin directory
+  (`/usr/lib*/qt6/plugins/falkon`); it runs on Falkon's embedded Python, so
+  it needs `www-client/falkon[python]`, PySide with `webengine` and
+  `network`, and `app-admin/keepassxc[browser]`. Enable it under Falkon →
+  Preferences → Extensions.
 
 ## USE flags (net-p2p/qeth)
 

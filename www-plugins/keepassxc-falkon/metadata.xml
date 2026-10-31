@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>michwill@yieldbasis.com</email>
+		<name>Michael Egorov</name>
+	</maintainer>
+	<longdescription lang="en">
+		A Falkon browser plugin that replaces Falkon's own password store with
+		KeePassXC, over KeePassXC's browser-integration protocol. It fills
+		logins on page load (including login forms inside iframes), saves and
+		updates them through Falkon's Remember/Update bar, handles passkeys
+		(WebAuthn) through KeePassXC, and adds a toolbar button listing the
+		current site's accounts with copy username / password / TOTP actions,
+		a right-click fill menu and a fill shortcut. Installed system-wide into
+		Falkon's plugin directory; it runs on Falkon's embedded Python and
+		PySide.
+	</longdescription>
+	<upstream>
+		<remote-id type="github">michwill/keepassxc-falkon</remote-id>
+	</upstream>
+</pkgmetadata>
