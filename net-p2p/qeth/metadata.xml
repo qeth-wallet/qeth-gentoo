@@ -21,7 +21,6 @@
 		<flag name="ledger">Ledger hardware-wallet support (vendors ledgereth/ledgerblue + the USB/BLE stack)</flag>
 		<flag name="falkon">Install the Falkon browser connector plugin</flag>
 		<flag name="chromium">Install the Chrome/Chromium extension package for manual loading</flag>
-		<flag name="firefox">Install and register the signed Firefox extension</flag>
 	</use>
 	<upstream>
 		<remote-id type="github">qeth-wallet/qeth</remote-id>

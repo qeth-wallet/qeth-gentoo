@@ -36,14 +36,14 @@ SRC_URI="
 	https://files.pythonhosted.org/packages/0f/49/bcd4d3f9210ed78749eab04d236eeb98f98fbcc16977f308ee4637c1bad8/rlp-4.0.1.tar.gz
 	https://files.pythonhosted.org/packages/f1/d9/bdfa9e715804020c3f3676346065c18adbc207c9343a3458246d7430f45c/web3-7.16.0.tar.gz
 	ledger? (
-		https://files.pythonhosted.org/packages/26/54/05aceb9cd80073805b3ed8522e3196e8cb22f70e741873fa51406c31f4e7/bleak-3.0.2-py3-none-any.whl
+		https://files.pythonhosted.org/packages/4d/f4/25642dbebe4d7aff3b36f95eae40c46a31f40b0f30f8c87b057456534ae3/bleak-3.1.0-py3-none-any.whl
 		https://files.pythonhosted.org/packages/e0/48/3f8c1a252e3a46fd04e6fabc5e11c933b9c39cf84edd4e7c906e29c23750/ECPy-1.2.5.tar.gz
 		https://files.pythonhosted.org/packages/a7/b2/4140c69c6a66432916b26158687e821ba631a4c9273c474343badf84d3ba/future-1.0.0.tar.gz
 		https://files.pythonhosted.org/packages/c0/bb/b9d96530f4a94bec5d76116b47e9e7c8dcc362a28b22ad6faa1d25c1d9ec/ledgerblue-0.1.48.tar.gz
 		https://files.pythonhosted.org/packages/b5/bb/4923dc24cda5ae4b2f21b85d02a57a026a6e8cc5379f40db869653e7b414/ledgereth-0.10.0.tar.gz
 		https://files.pythonhosted.org/packages/58/f8/cd11ec90bd6a6bcf35bb80e4e29fdebe8bf2b05e869a93ca1e41d85518d0/ndeflib-0.3.3.tar.gz
 		https://files.pythonhosted.org/packages/38/a2/cce3ab796e84bea5098c4231ff56e523cb182c58a21280ccff0d75e693e6/nfcpy-1.0.4.tar.gz
-		https://files.pythonhosted.org/packages/f4/e7/50e72301e32acb73a314e663c2014e1ddefc019d5f434ff14ec89861d664/pycryptodomex-3.24.1.tar.gz
+		https://files.pythonhosted.org/packages/f3/c2/f5855412372e47d635599a97c00cfcf9fc40accac9436a11bf9ded19f859/pycryptodomex-3.24.2.tar.gz
 		https://files.pythonhosted.org/packages/4d/3d/0997fe8196f5be24b7015708a0744a0ef928c4fb3c8bc820dc3328208ef2/python-u2flib-host-3.0.3.tar.gz
 	)
 	simulate? (
@@ -69,7 +69,7 @@ SRC_URI="
 LICENSE="GPL-3+"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="+simulate +helios +qr +frame +ledger +trezor falkon chromium firefox"
+IUSE="+simulate +helios +qr +frame +ledger +trezor falkon chromium"
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 # System (generic) deps — the eth stack is vendored (see SRC_URI / src_install).
@@ -160,7 +160,6 @@ BDEPEND="${PYTHON_DEPS}
 		dev-build/ninja
 	)
 	chromium? ( app-arch/unzip )
-	firefox? ( app-arch/unzip )
 "
 
 # Only the qeth tarball is unpacked; the vendored sdists/wheels stay in
@@ -197,9 +196,9 @@ src_install() {
 	# import-required by ledgerblue.comm, vendored as its noarch wheel).
 	use ledger && vend+=(
 		ledgereth-0.10.0.tar.gz ledgerblue-0.1.48.tar.gz
-		bleak-3.0.2-py3-none-any.whl ECPy-1.2.5.tar.gz nfcpy-1.0.4.tar.gz
+		bleak-3.1.0-py3-none-any.whl ECPy-1.2.5.tar.gz nfcpy-1.0.4.tar.gz
 		ndeflib-0.3.3.tar.gz future-1.0.0.tar.gz python-u2flib-host-3.0.3.tar.gz
-		pycryptodomex-3.24.1.tar.gz
+		pycryptodomex-3.24.2.tar.gz
 	)
 	use simulate && vend+=(
 		cached_property-2.0.1.tar.gz eth_bloom-4.0.0.tar.gz lru_dict-1.4.1.tar.gz
@@ -260,7 +259,10 @@ src_install() {
 	# phase the first time the app version moved without a republish. The
 	# connector protocol (JSON-RPC on 127.0.0.1:1248) is stable across these,
 	# so an older extension talks to a newer qeth fine.
-	local zip xpi
+	# (Firefox has no bundled copy since 0.26.0: upstream retired the
+	# self-distributed .xpi once addons.mozilla.org served the listed add-on —
+	# see pkg_postinst.)
+	local zip
 	if use chromium; then
 		zip=$(echo extensions/chrome/${PN}-*-chrome.zip)
 		[[ -f ${zip} ]] || die "no chrome extension zip in extensions/chrome/"
@@ -271,24 +273,6 @@ src_install() {
 		insinto /usr/share/${PN}/extensions/chrome/unpacked
 		doins -r "${T}"/chrome-unpacked/.
 		einfo "bundled Chrome extension: $(basename "${zip}")"
-	fi
-
-	# Firefox extension: the Mozilla-signed .xpi, plus an auto-drop so Firefox
-	# offers it. A sideloaded xpi is only picked up when its filename IS the
-	# add-on id, and the id is whatever Mozilla signed it under (the shipped
-	# build is firefox@qeth.eth, not the source manifest's wallet@qeth.eth) —
-	# so read it out of the xpi rather than hardcoding it.
-	if use firefox; then
-		xpi=$(echo extensions/firefox/${PN}-*.xpi)
-		[[ -f ${xpi} ]] || die "no signed .xpi in extensions/firefox/"
-		insinto /usr/share/${PN}/extensions/firefox
-		doins "${xpi}"
-		QETH_XPI_ID=$(unzip -p "${xpi}" manifest.json | "${EPYTHON}" -c \
-			'import json,sys; print(json.load(sys.stdin)["browser_specific_settings"]["gecko"]["id"])') \
-			|| die "can't read the add-on id from ${xpi}"
-		insinto "/usr/$(get_libdir)/mozilla/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
-		newins "${xpi}" "${QETH_XPI_ID}.xpi"
-		einfo "bundled Firefox extension: $(basename "${xpi}") (${QETH_XPI_ID})"
 	fi
 }
 
@@ -312,9 +296,15 @@ pkg_postinst() {
 		elog "  or load the bundled copy: chrome://extensions -> Developer mode ->"
 		elog "  Load unpacked -> /usr/share/${PN}/extensions/chrome/unpacked"
 	fi
-	if use firefox; then
-		elog "Firefox should offer the Mozilla-signed qeth add-on on next start;"
-		elog "  otherwise about:addons -> Install Add-on From File -> the .xpi under"
-		elog "  /usr/share/${PN}/extensions/firefox/"
-	fi
+	elog "Firefox: install the qeth add-on from addons.mozilla.org (it updates itself):"
+	elog "  https://addons.mozilla.org/firefox/addon/qeth/"
+	local v
+	for v in ${REPLACING_VERSIONS}; do
+		if ver_test "${v}" -lt 0.26.0; then
+			ewarn "USE=firefox was dropped in 0.26.0. If you had it on, the system-wide"
+			ewarn "add-on it sideloaded (firefox@qeth.eth, which never updated itself) is"
+			ewarn "gone — install qeth from addons.mozilla.org instead (link above)."
+			break
+		fi
+	done
 }

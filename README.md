@@ -49,10 +49,12 @@ JSON-RPC server.
 | `trezor` | on | Trezor hardware-wallet support (vendors trezorlib + the parts of its closure not in ::gentoo) |
 | `falkon` | off | install the Falkon browser connector plugin |
 | `chromium` | off | install the Chrome extension for manual loading (it is also on the Chrome Web Store) |
-| `firefox` | off | install + register the Mozilla-signed Firefox extension (registered under the id it was signed with) |
 
-The three browser-integration flags are off by default so a plain install pulls
-no external browser.
+The two browser-integration flags are off by default so a plain install pulls
+no external browser. Firefox users install the add-on from
+[addons.mozilla.org](https://addons.mozilla.org/firefox/addon/qeth/) (the
+`firefox` flag, which sideloaded a separately signed copy under the id
+`firefox@qeth.eth`, was dropped in 0.26.0 when upstream retired that file).
 
 ## Using the overlay
 
@@ -117,7 +119,7 @@ package; only code and the vendored deps are installed system-wide).
 ### Test with all USE flags, not the box's defaults
 
 ```sh
-USE="firefox chromium falkon frame helios ledger qr simulate trezor" \
+USE="chromium falkon frame helios ledger qr simulate trezor" \
     emerge -1 net-p2p/qeth
 ```
 
