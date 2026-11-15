@@ -28,6 +28,14 @@ JSON-RPC server.
   it needs `www-client/falkon[python]`, PySide with `webengine` and
   `network`, and `app-admin/keepassxc[browser]`. Enable it under Falkon →
   Preferences → Extensions.
+- **`net-im/nchat`** — [nchat](https://github.com/d99kris/nchat), a terminal
+  (ncurses) chat client for Telegram and WhatsApp. Built from source with
+  upstream's bundled tdlib (Telegram) and patched whatsmeow (WhatsApp, Go);
+  the whatsmeow Go module tree is fetched from the Go module proxy via
+  `EGO_SUM`. USE `telegram` / `whatsapp` select the protocols (both on);
+  `X` adds the built-in X11 clipboard. Signal (upstream opt-in; needs
+  libsignal built with Rust) is not enabled. The protocol libraries live in
+  a private `/usr/lib*/nchat`. See [Bumping nchat](#bumping-nchat).
 
 ## USE flags (net-p2p/qeth)
 
@@ -125,3 +133,27 @@ matched at 0.22.0 by coincidence, and the test box had both flags off.
 The general form of the trap: **an unchanged ebuild against a changed tarball
 is a new configuration**, so "the body didn't change" is not a reason to skip
 the build test.
+
+## Bumping nchat
+
+1. `git mv net-im/nchat/nchat-<old>.ebuild net-im/nchat/nchat-<new>.ebuild`
+2. Regenerate `EGO_SUM` from the new tarball's WhatsApp module and paste it
+   over the old list:
+   ```sh
+   awk '{printf "\t\"%s %s\"\n", $1, $2}' nchat-<new>/lib/wmchat/go/go.sum
+   ```
+   Also check `go` in that `go.mod` against the ebuild's `dev-lang/go` bound.
+3. `ebuild net-im/nchat/nchat-<new>.ebuild manifest`. **Watch where the Go
+   modules come from.** Gentoo's `mirror://goproxy` lists both
+   proxy.golang.org and goproxy.io, and portage picks between them at random.
+   goproxy.io now answers module URLs with an HTML redirect page and HTTP 200,
+   so a manifest run can record the hash of that page. Avoid it by pinning
+   the mirror before running `manifest`:
+   ```sh
+   echo 'goproxy https://proxy.golang.org/' >> /etc/portage/mirrors
+   ```
+   If a junk file did get in, delete it from `DISTDIR` and regenerate. The
+   build catches it either way: Go checks every module against `go.sum`.
+   Users are not affected by a correct Manifest, because portage moves on to
+   the next mirror when a size or hash check fails.
+4. Test with `USE="telegram whatsapp X test"`, and with each protocol alone.

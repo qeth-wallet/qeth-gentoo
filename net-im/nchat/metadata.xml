@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>michwill@yieldbasis.com</email>
+		<name>Michael Egorov</name>
+	</maintainer>
+	<longdescription lang="en">
+		nchat is a terminal-based (ncurses) chat client for Telegram and
+		WhatsApp, with a Vim/Emacs-friendly UI: chat list and message panes,
+		message history, replies, reactions, file transfers, emoji, and
+		multiple accounts at once. Telegram support uses a bundled copy of the
+		official tdlib; WhatsApp support uses a bundled, patched whatsmeow (Go).
+		Each protocol is a separate library that nchat loads at runtime.
+	</longdescription>
+	<use>
+		<flag name="telegram">Build Telegram support (bundled <pkg>net-libs/tdlib</pkg>; a long, memory-hungry build)</flag>
+		<flag name="whatsapp">Build WhatsApp support (whatsmeow, needs <pkg>dev-lang/go</pkg> to build)</flag>
+		<flag name="X">Built-in X11 clipboard via <pkg>x11-libs/libxcb</pkg></flag>
+	</use>
+	<upstream>
+		<remote-id type="github">d99kris/nchat</remote-id>
+		<bugs-to>https://github.com/d99kris/nchat/issues</bugs-to>
+	</upstream>
+</pkgmetadata>
