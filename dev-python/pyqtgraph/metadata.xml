@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>michwill@yieldbasis.com</email>
+		<name>Michael Egorov</name>
+	</maintainer>
+	<longdescription lang="en">
+		PyQtGraph is a pure-python graphics and GUI library built on PyQt and numpy.
+		This overlay copy only drops ::gentoo's NumPy &lt;2.5 cap (needed by
+		x11-misc/crypto-dashboard); remove it once ::gentoo catches up.
+	</longdescription>
+	<upstream>
+		<remote-id type="github">pyqtgraph/pyqtgraph</remote-id>
+		<remote-id type="pypi">pyqtgraph</remote-id>
+	</upstream>
+	<use>
+		<flag name="pyqt6">Use <pkg>dev-python/pyqt6</pkg> as Qt for Python implementation</flag>
+		<flag name="pyside6">Use <pkg>dev-python/pyside</pkg> as Qt for Python implementation</flag>
+	</use>
+</pkgmetadata>

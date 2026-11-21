@@ -19,7 +19,13 @@ JSON-RPC server.
 - **`x11-misc/crypto-dashboard`** — a real-time cryptocurrency dashboard
   (PyQt6 + pyqtgraph) with live Binance candlestick charts. A plain
   `distutils-r1` (hatchling) package: PyQt6 and all other dependencies come
-  from the Gentoo tree, nothing is vendored.
+  from the Gentoo tree (pyqtgraph via the override below), nothing is vendored.
+- **`dev-python/pyqtgraph`** — `0.14.0-r100`, an override of ::gentoo's
+  `0.14.0-r1` for crypto-dashboard. It only drops ::gentoo's
+  `<dev-python/numpy-2.5.0` cap, which otherwise blocks the now-stable
+  NumPy 2.5. The one 0.14.0 incompatibility, `np.row_stack` in an example
+  script, is patched as in upstream PR #3510. To be removed once ::gentoo
+  ships pyqtgraph > 0.14.0 or lifts the cap.
 - **`www-plugins/keepassxc-falkon`** — [KeePassXC as Falkon's password
   manager](https://github.com/michwill/keepassxc-falkon): filling (iframes
   included), saving, passkeys and a toolbar menu with copy actions. A Python
