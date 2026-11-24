@@ -8,7 +8,7 @@ JSON-RPC server.
 
 - **`net-p2p/qeth`** — the wallet. Generic dependencies (PySide6, aiohttp,
   pydantic, requests, …) come from the system; the Ethereum library stack
-  (web3, eth-\*, ledgereth, and its narrowly-pinned compiled deps like ckzg and
+  (web3, eth-\*, and their narrowly-pinned compiled deps like ckzg and
   cytoolz) is **vendored from source** into a private `/usr/lib*/qeth/vendor`
   tree and reached through a `/usr/bin/qeth` `PYTHONPATH` wrapper. This mirrors
   the wallet's existing rpm/deb/AppImage/Flatpak packaging, because the eth
@@ -51,7 +51,7 @@ JSON-RPC server.
 | `helios` | on | verified (light-client) reads via `net-p2p/helios-bin` |
 | `qr` | on | air-gapped QR signing + camera scanning (pulls Qt Multimedia) |
 | `frame` | on | import Frame desktop-wallet accounts (pulls `dev-python/cryptography`) |
-| `ledger` | on | Ledger hardware-wallet support (vendors ledgereth/ledgerblue + the USB/BLE stack) |
+| `ledger` | on | Ledger hardware-wallet support (qeth's own client since 0.27.0; needs only `dev-python/hidapi`) |
 | `trezor` | on | Trezor hardware-wallet support (vendors trezorlib + the parts of its closure not in ::gentoo) |
 | `falkon` | off | install the Falkon browser connector plugin |
 | `chromium` | off | install the Chrome extension for manual loading (it is also on the Chrome Web Store) |
@@ -98,11 +98,8 @@ package; only code and the vendored deps are installed system-wide).
 
 - **From-source vendoring**: the eth stack is compiled offline at build time
   (`pip --no-index --no-build-isolation --no-deps`); the compiled extensions
-  (ckzg, cytoolz, pycryptodomex, plus lru-dict for `simulate` and zxing-cpp for
-  `qr`) build against the system Python. A build-time guard fails if PySide6
+  (ckzg, cytoolz, plus lru-dict for `simulate` and zxing-cpp for `qr`) build against the system Python. A build-time guard fails if PySide6
   ever leaks into the vendored tree.
-- **bleak** is vendored as its noarch wheel (it is import-required by
-  `ledgerblue.comm`, but its sdist uses the `uv_build` backend, which we avoid).
 - **helios** pins the upstream `0.12.0` linux/amd64 release; qeth auto-detects
   `/usr/bin/helios` on PATH and degrades to untrusted RPC when absent. (0.11.1
   was dropped: it compiled in a CA list that still trusts the compromised

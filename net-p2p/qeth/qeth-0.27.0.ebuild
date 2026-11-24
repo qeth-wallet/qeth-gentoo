@@ -11,7 +11,7 @@ inherit desktop python-single-r1 xdg
 DESCRIPTION="Qt Ethereum wallet with Ledger/Trezor support and a Frame-compatible JSON-RPC server"
 HOMEPAGE="https://github.com/qeth-wallet/qeth"
 
-# The Ethereum stack (web3, eth-*, ledgereth, ckzg, cytoolz, …) is absent from
+# The Ethereum stack (web3, eth-*, ckzg, cytoolz, …) is absent from
 # every Gentoo repo and pins its inter-versions too narrowly for system
 # site-packages, so it is VENDORED from-source into a private tree. Everything
 # generic (PySide6, aiohttp, pydantic, …) comes from the system as RDEPEND.
@@ -33,19 +33,8 @@ SRC_URI="
 	https://files.pythonhosted.org/packages/27/4f/eabe45c58f2d27cd0b338ecc41b0b475a3751ed70eb1a21db08497e3ceec/hexbytes-2.0.0.tar.gz
 	https://files.pythonhosted.org/packages/7b/91/abdc50c4ef06fdf8d047f60ee777ca9b2a7885e1a9cea81343fbecda52d7/parsimonious-0.10.0.tar.gz
 	https://files.pythonhosted.org/packages/25/ab/b912c484cfb96ba4834efe050bbf10c9e157bd8189eb859aefba8712b136/pyunormalize-17.0.0.tar.gz
-	https://files.pythonhosted.org/packages/0f/49/bcd4d3f9210ed78749eab04d236eeb98f98fbcc16977f308ee4637c1bad8/rlp-4.0.1.tar.gz
+	https://files.pythonhosted.org/packages/1b/2d/439b0728a92964a04d9c88ea1ca9ebb128893fbbd5834faa31f987f2fd4c/rlp-4.1.0.tar.gz
 	https://files.pythonhosted.org/packages/f1/d9/bdfa9e715804020c3f3676346065c18adbc207c9343a3458246d7430f45c/web3-7.16.0.tar.gz
-	ledger? (
-		https://files.pythonhosted.org/packages/4d/f4/25642dbebe4d7aff3b36f95eae40c46a31f40b0f30f8c87b057456534ae3/bleak-3.1.0-py3-none-any.whl
-		https://files.pythonhosted.org/packages/e0/48/3f8c1a252e3a46fd04e6fabc5e11c933b9c39cf84edd4e7c906e29c23750/ECPy-1.2.5.tar.gz
-		https://files.pythonhosted.org/packages/a7/b2/4140c69c6a66432916b26158687e821ba631a4c9273c474343badf84d3ba/future-1.0.0.tar.gz
-		https://files.pythonhosted.org/packages/c0/bb/b9d96530f4a94bec5d76116b47e9e7c8dcc362a28b22ad6faa1d25c1d9ec/ledgerblue-0.1.48.tar.gz
-		https://files.pythonhosted.org/packages/b5/bb/4923dc24cda5ae4b2f21b85d02a57a026a6e8cc5379f40db869653e7b414/ledgereth-0.10.0.tar.gz
-		https://files.pythonhosted.org/packages/58/f8/cd11ec90bd6a6bcf35bb80e4e29fdebe8bf2b05e869a93ca1e41d85518d0/ndeflib-0.3.3.tar.gz
-		https://files.pythonhosted.org/packages/38/a2/cce3ab796e84bea5098c4231ff56e523cb182c58a21280ccff0d75e693e6/nfcpy-1.0.4.tar.gz
-		https://files.pythonhosted.org/packages/f3/c2/f5855412372e47d635599a97c00cfcf9fc40accac9436a11bf9ded19f859/pycryptodomex-3.24.2.tar.gz
-		https://files.pythonhosted.org/packages/4d/3d/0997fe8196f5be24b7015708a0744a0ef928c4fb3c8bc820dc3328208ef2/python-u2flib-host-3.0.3.tar.gz
-	)
 	simulate? (
 		https://files.pythonhosted.org/packages/76/4b/3d870836119dbe9a5e3c9a61af8cc1a8b69d75aea564572e385882d5aefb/cached_property-2.0.1.tar.gz
 		https://files.pythonhosted.org/packages/f3/ba/05174f5cd0d47230bab59706a5257ed812385fb05c1acba7c8ad9945c14a/eth_bloom-4.0.0.tar.gz
@@ -73,6 +62,8 @@ IUSE="+simulate +helios +qr +frame +ledger +trezor falkon chromium"
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 # System (generic) deps — the eth stack is vendored (see SRC_URI / src_install).
+# USE=ledger needs only hidapi since 0.27.0: qeth talks to the Ledger Ethereum
+# app itself over USB-HID (ledgereth / ledgerblue and their closure are gone).
 RDEPEND="${PYTHON_DEPS}
 	$(python_gen_cond_dep '
 		dev-python/pyside[gui,network,svg,widgets,${PYTHON_USEDEP}]
@@ -101,18 +92,7 @@ RDEPEND="${PYTHON_DEPS}
 		dev-python/urllib3[${PYTHON_USEDEP}]
 		dev-python/websockets[${PYTHON_USEDEP}]
 		dev-python/yarl[${PYTHON_USEDEP}]
-		ledger? (
-			dev-python/hidapi[${PYTHON_USEDEP}]
-			dev-python/libusb1[${PYTHON_USEDEP}]
-			dev-python/pyelftools[${PYTHON_USEDEP}]
-			dev-python/pyserial[${PYTHON_USEDEP}]
-			dev-python/protobuf[${PYTHON_USEDEP}]
-			dev-python/pydes[${PYTHON_USEDEP}]
-			dev-python/dbus-fast[${PYTHON_USEDEP}]
-			dev-python/python-gnupg[${PYTHON_USEDEP}]
-			dev-python/websocket-client[${PYTHON_USEDEP}]
-			dev-python/pillow[${PYTHON_USEDEP}]
-		)
+		ledger? ( dev-python/hidapi[${PYTHON_USEDEP}] )
 		simulate? ( dev-python/sortedcontainers[${PYTHON_USEDEP}] )
 		qr? (
 			dev-python/cbor2[${PYTHON_USEDEP}]
@@ -190,15 +170,7 @@ src_install() {
 		eth_account-0.13.7.tar.gz eth_hash-0.8.0.tar.gz eth_keyfile-0.8.1.tar.gz
 		eth_keys-0.8.0.tar.gz eth_rlp-3.0.0.tar.gz eth_typing-6.0.0.tar.gz
 		eth_utils-5.3.1.tar.gz hexbytes-2.0.0.tar.gz parsimonious-0.10.0.tar.gz
-		pyunormalize-17.0.0.tar.gz rlp-4.0.1.tar.gz web3-7.16.0.tar.gz
-	)
-	# Ledger hardware-wallet cluster (ledgereth pins ledgerblue==0.1.48; bleak is
-	# import-required by ledgerblue.comm, vendored as its noarch wheel).
-	use ledger && vend+=(
-		ledgereth-0.10.0.tar.gz ledgerblue-0.1.48.tar.gz
-		bleak-3.1.0-py3-none-any.whl ECPy-1.2.5.tar.gz nfcpy-1.0.4.tar.gz
-		ndeflib-0.3.3.tar.gz future-1.0.0.tar.gz python-u2flib-host-3.0.3.tar.gz
-		pycryptodomex-3.24.2.tar.gz
+		pyunormalize-17.0.0.tar.gz rlp-4.1.0.tar.gz web3-7.16.0.tar.gz
 	)
 	use simulate && vend+=(
 		cached_property-2.0.1.tar.gz eth_bloom-4.0.0.tar.gz lru_dict-1.4.1.tar.gz
